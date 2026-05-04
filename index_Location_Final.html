@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Attendance</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#eef3fb;color:#172033}.page{max-width:1180px;margin:0 auto;padding:26px}.shell{display:grid;grid-template-columns:410px 1fr;gap:24px}.panel{background:#fff;border:1px solid #dbe5f2;border-radius:18px;box-shadow:0 10px 30px rgba(15,23,42,.08);overflow:hidden}.brand{background:#0f172a;color:white;padding:22px 24px}.brand h1{font-size:24px;margin:0 0 6px}.brand p{margin:0;color:#cbd5e1;font-size:13px}.content{padding:20px}.step{display:flex;gap:12px;align-items:flex-start;margin-bottom:16px}.badge{width:28px;height:28px;border-radius:50%;background:#e8f0ff;color:#2563eb;font-weight:800;display:flex;align-items:center;justify-content:center}.hint{font-size:13px;color:#52627a;line-height:1.45;margin:4px 0 0}.label{font-size:12px;font-weight:800;color:#475569;text-transform:uppercase;letter-spacing:.04em;margin:14px 0 8px}.input,.select{width:100%;height:46px;border:1px solid #d5e0ee;border-radius:14px;padding:0 14px;font-size:15px;background:#fff;outline:none}.input:focus,.select:focus{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}.btn{height:46px;border:0;border-radius:14px;font-weight:800;font-size:15px;cursor:pointer;width:100%;transition:.15s}.btn:disabled{opacity:.45;cursor:not-allowed}.btn-primary{background:#2563eb;color:#fff}.btn-dark{background:#0f172a;color:#fff}.btn-soft{background:#eaf1ff;color:#174ea6}.btn-green{background:#16a34a;color:#fff}.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.otp-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}.notice{padding:12px 14px;border-radius:14px;font-size:13px;margin-top:12px}.ok{background:#e9fff2;color:#047039;border:1px solid #b8f4cf}.bad{background:#fff1f2;color:#be123c;border:1px solid #fecdd3}.card-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.mini{border:1px solid #dde7f5;border-radius:14px;padding:12px;background:#fbfdff}.mini b{display:block;font-size:11px;color:#64748b;text-transform:uppercase;margin-bottom:8px}.mini span{font-size:14px;color:#0f172a;font-weight:700}.status-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}.status{height:44px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}.ready{background:#e9fff2;color:#047039;border:1px solid #b8f4cf}.notready{background:#fff1f2;color:#be123c;border:1px solid #fecdd3}.location-box{border:1px solid #dde7f5;border-radius:16px;background:#fbfdff;padding:14px;line-height:1.55;font-size:14px;margin:12px 0}.video-wrap{border:1px solid #0f172a;border-radius:18px;overflow:hidden;background:#020617;min-height:300px}video,img{width:100%;display:block;background:#020617;object-fit:cover;min-height:300px}canvas{display:none}.actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}.locked{filter:grayscale(.3);opacity:.55;pointer-events:none}.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}.title h2{margin:0;font-size:24px}.title p{margin:5px 0 0;color:#64748b;font-size:13px}@media(max-width:900px){.shell{grid-template-columns:1fr}.page{padding:14px}.otp-row,.row,.actions,.status-row{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <section class="panel">
+        <div class="brand"><h1>Attendance</h1><p>Secure OTP + GPS + Live Selfie System</p></div>
+        <div class="content">
+          <div class="step"><div class="badge">1</div><div><b>Login with employee email</b><p class="hint">The OTP will be sent to the registered email in the Employees sheet.</p></div></div>
+          <div class="label">Email ID</div>
+          <input id="email" class="input" type="email" placeholder="employee@example.com" />
+          <div style="height:12px"></div>
+          <button class="btn btn-primary" onclick="sendOtp()">Send OTP</button>
+          <div class="label">OTP</div>
+          <div class="otp-row"><input id="otp" class="input" inputmode="numeric" placeholder="Enter OTP" /><button class="btn btn-dark" onclick="verifyOtp()">Verify</button></div>
+          <div id="loginMsg"></div>
+          <div id="profile" style="display:none" class="mini-profile">
+            <div style="margin-top:16px;border:1px solid #dde7f5;border-radius:18px;background:#fbfdff;padding:16px">
+              <h2 id="pName" style="margin:0 0 4px;font-size:22px">-</h2>
+              <div id="pEmail" style="color:#52627a;font-size:13px">-</div>
+              <div class="card-grid">
+                <div class="mini"><b>Employee ID</b><span id="pEmpId">-</span></div>
+                <div class="mini"><b>Department</b><span id="pDept">-</span></div>
+                <div class="mini"><b>Designation</b><span id="pDesig">-</span></div>
+                <div class="mini"><b>Site</b><span id="pSite">-</span></div>
+                <div class="mini"><b>Mobile</b><span id="pMobile">-</span></div>
+                <div class="mini"><b>Status</b><span id="pStatus">-</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="content">
+          <div class="topbar"><div class="title"><h2>Attendance Form</h2><p>Employee email OTP verification is required to unlock the form.</p></div></div>
+          <div id="attendanceArea" class="locked">
+            <div class="status-row"><div id="camStatus" class="status notready">Camera: Not Ready</div><div id="gpsStatus" class="status notready">GPS: Not Captured</div></div>
+            <div class="row"><div><div class="label">Attendance Type</div><select id="attendanceType" class="select"><option value="IN">IN</option><option value="OUT">OUT</option></select></div><div><div class="label">Accuracy</div><input id="accuracy" class="input" readonly placeholder="-" /></div></div>
+            <div style="height:12px"></div><button class="btn btn-soft" onclick="allowCameraGps()">Allow Camera & GPS</button>
+            <div class="location-box"><b>Latitude:</b> <span id="latText">-</span><br><b>Longitude:</b> <span id="lngText">-</span><br><b>Readable address:</b> <span id="addrText">The address will be automatically fetched and saved in the sheet after submission.</span><br><b>Map:</b> <a id="mapLink" href="#" target="_blank" style="color:#2563eb;font-weight:800;display:none">View Location</a></div>
+            <div class="video-wrap"><video id="video" autoplay playsinline muted></video><img id="preview" style="display:none" /></div>
+            <canvas id="canvas"></canvas>
+            <div class="actions"><button class="btn btn-dark" onclick="captureSelfie()">Capture Selfie</button><button class="btn btn-green" onclick="submitAttendance()">Submit Attendance</button></div>
+            <div id="formMsg"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbywB5uPP-1JammschsY-5Kt7EQs77CXHbXwU8zK75MWxABf_anqAfIE4IacwIminSzADQ/exec";
+  let verifiedEmployee = null;
+  let gpsData = null;
+  let cameraStream = null;
+  let selfieBase64 = "";
+
+  function showMsg(id, message, type){document.getElementById(id).innerHTML = `<div class="notice ${type}">${message}</div>`;}
+  async function api(data){const res = await fetch(SCRIPT_URL,{method:"POST",body:JSON.stringify(data)});return await res.json();}
+
+  async function sendOtp(){
+    try{
+      const email = document.getElementById("email").value.trim();
+      if(!email) return showMsg("loginMsg","Please enter email id.","bad");
+      showMsg("loginMsg","Sending OTP...","ok");
+      const out = await api({action:"sendOTP", email});
+      showMsg("loginMsg", out.message || "OTP sent", out.success ? "ok" : "bad");
+    }catch(e){showMsg("loginMsg","OTP send failed. Check Apps Script deployment and Gmail permission.","bad");}
+  }
+
+  async function verifyOtp(){
+    try{
+      const email = document.getElementById("email").value.trim();
+      const otp = document.getElementById("otp").value.trim();
+      if(!email || !otp) return showMsg("loginMsg","Please enter email and OTP.","bad");
+      const out = await api({action:"verifyOTP", email, otp});
+      if(!out.success) return showMsg("loginMsg", out.message || "OTP verification failed", "bad");
+      verifiedEmployee = out.employee;
+      fillProfile(verifiedEmployee);
+      document.getElementById("attendanceArea").classList.remove("locked");
+      showMsg("loginMsg","Login verified. Attendance form unlocked.","ok");
+    }catch(e){showMsg("loginMsg","OTP verification failed.","bad");}
+  }
+
+  function fillProfile(e){
+    document.getElementById("profile").style.display="block";
+    document.getElementById("pName").innerText=e.name||"-";
+    document.getElementById("pEmail").innerText=e.email||"-";
+    document.getElementById("pEmpId").innerText=e.employeeId||"-";
+    document.getElementById("pDept").innerText=e.department||"-";
+    document.getElementById("pDesig").innerText=e.designation||"-";
+    document.getElementById("pSite").innerText=e.site||"-";
+    document.getElementById("pMobile").innerText=e.mobile||"-";
+    document.getElementById("pStatus").innerText=e.status||"-";
+  }
+
+  async function allowCameraGps(){
+    await startGps();
+    await startCamera();
+  }
+
+  function startGps(){
+    return new Promise(resolve=>{
+      if(!navigator.geolocation){showMsg("formMsg","GPS is not supported in this browser.","bad"); return resolve(false);}
+      navigator.geolocation.getCurrentPosition(pos=>{
+        gpsData={lat:pos.coords.latitude,lng:pos.coords.longitude,accuracy:pos.coords.accuracy};
+        document.getElementById("gpsStatus").className="status ready";
+        document.getElementById("gpsStatus").innerText="GPS: Captured";
+        document.getElementById("latText").innerText=gpsData.lat.toFixed(6);
+        document.getElementById("lngText").innerText=gpsData.lng.toFixed(6);
+        document.getElementById("accuracy").value=Math.round(gpsData.accuracy)+" meter";
+        const mapUrl = "https://www.google.com/maps?q=" + gpsData.lat + "," + gpsData.lng;
+        const mapEl = document.getElementById("mapLink");
+        mapEl.href = mapUrl;
+        mapEl.style.display = "inline";
+        fetchReadableAddress();
+        resolve(true);
+      },err=>{document.getElementById("gpsStatus").className="status notready";document.getElementById("gpsStatus").innerText="GPS: Failed";showMsg("formMsg","GPS failed: "+err.message,"bad");resolve(false);},{enableHighAccuracy:true,timeout:20000,maximumAge:0});
+    });
+  }
+
+  async function fetchReadableAddress(){
+    if(!gpsData) return;
+    document.getElementById("addrText").innerText = "Fetching address...";
+    try{
+      const out = await api({ action:"getAddress", lat:gpsData.lat, lng:gpsData.lng });
+      if(out.success && out.address){
+        document.getElementById("addrText").innerText = out.address;
+      }else{
+        document.getElementById("addrText").innerText = out.message || "Open map link to view exact location.";
+      }
+    }catch(e){
+      document.getElementById("addrText").innerText = "Open map link to view exact location.";
+    }
+  }
+
+  async function startCamera(){
+    try{
+      if(cameraStream) stopCamera();
+      cameraStream = await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:{ideal:900},height:{ideal:700}},audio:false});
+      const video=document.getElementById("video");
+      document.getElementById("preview").style.display="none";
+      video.style.display="block";
+      video.srcObject=cameraStream;
+      await video.play();
+      document.getElementById("camStatus").className="status ready";
+      document.getElementById("camStatus").innerText="Camera: Ready";
+    }catch(e){document.getElementById("camStatus").className="status notready";document.getElementById("camStatus").innerText="Camera: Blocked";showMsg("formMsg","Camera permission denied. Open this page from the Netlify link and allow camera.","bad");}
+  }
+
+  function captureSelfie(){
+    const video=document.getElementById("video");
+    if(!cameraStream) return showMsg("formMsg","Please allow camera first.","bad");
+    const canvas=document.getElementById("canvas");
+    canvas.width=video.videoWidth||900; canvas.height=video.videoHeight||700;
+    canvas.getContext("2d").drawImage(video,0,0,canvas.width,canvas.height);
+    selfieBase64=canvas.toDataURL("image/jpeg",0.86);
+    const preview=document.getElementById("preview");
+    preview.src=selfieBase64; preview.style.display="block"; video.style.display="none";
+    stopCamera();
+    showMsg("formMsg","Selfie captured. Camera has been turned off.","ok");
+  }
+
+  function stopCamera(){
+    if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null;}
+    const video=document.getElementById("video");
+    video.pause(); video.srcObject=null;
+    document.getElementById("camStatus").className="status notready";
+    document.getElementById("camStatus").innerText="Camera: Off";
+  }
+
+  async function submitAttendance(){
+    try{
+      if(!verifiedEmployee) return showMsg("formMsg","Please verify OTP first.","bad");
+      if(!gpsData) return showMsg("formMsg","Please capture GPS first.","bad");
+      if(!selfieBase64) return showMsg("formMsg","Please capture selfie first.","bad");
+      showMsg("formMsg","Submitting attendance...","ok");
+      const out = await api({
+        action:"submitAttendance",
+        email: verifiedEmployee.email,
+        attendanceType: document.getElementById("attendanceType").value,
+        lat: gpsData.lat,
+        lng: gpsData.lng,
+        accuracy: gpsData.accuracy,
+        photoBase64: selfieBase64
+      });
+      if(!out.success) return showMsg("formMsg", out.message || "Submit failed", "bad");
+      document.getElementById("addrText").innerText = out.address || "Saved";
+      if(out.mapLink){ const mapEl=document.getElementById("mapLink"); mapEl.href=out.mapLink; mapEl.style.display="inline"; }
+      selfieBase64="";
+      showMsg("formMsg","Attendance submitted successfully. Address and map link saved in sheet.","ok");
+    }catch(e){showMsg("formMsg","Submit failed. Check backend deployment.","bad");}
+  }
+</script>
+</body>
+</html>
